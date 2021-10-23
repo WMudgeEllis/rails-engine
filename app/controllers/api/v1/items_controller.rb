@@ -14,8 +14,18 @@ class Api::V1::ItemsController < ApplicationController
   def create
     item = Item.new(item_params)
     if item.save
-      render json: ItemsSerializer.item_show(item.id)
+      render json: ItemsSerializer.item_show(item.id), status: 201
     else
+      render json: {error: item.errors.full_messages.to_sentence}
+    end
+  end
+
+  def update
+    item = Item.find(params[:id])
+    if item.update(item_params)
+      render json: ItemsSerializer.item_show(item.id)
+    elsif item.nil?
+      status = 404
     end
   end
 
