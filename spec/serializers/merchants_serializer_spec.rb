@@ -41,4 +41,15 @@ RSpec.describe MerchantsSerializer do
     expect(response[:data].length).to eq(50)
   end
 
+  it '#merchant_show' do
+    create_list(:merchant, 3)
+
+    merchant = Merchant.last
+
+    response = MerchantsSerializer.merchant_show(merchant.id)
+
+    expect(response[:data][:id]).to eq("#{merchant.id}")
+    expect(response[:data][:type]).to eq('merchant')
+    expect(response[:data][:attributes][:name]).to eq(merchant.name)
+  end
 end

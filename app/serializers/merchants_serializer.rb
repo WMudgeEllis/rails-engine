@@ -21,4 +21,14 @@ class MerchantsSerializer
     api
   end
 
+  def self.merchant_show(merchant_id)
+    merchant = Merchant.find(merchant_id)
+    api = { data: {
+      id: "#{merchant.id}",
+      type: 'merchant',
+      attributes: {
+        name: merchant.name
+      }
+      }}
+  end
 end

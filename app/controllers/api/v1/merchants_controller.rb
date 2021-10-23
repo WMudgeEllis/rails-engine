@@ -13,7 +13,10 @@
         per_page = nil
       end
       render json: MerchantsSerializer.merchant_index(page, per_page)
+    end
 
+    def show
+      render json: MerchantsSerializer.merchant_show(params[:id])
     end
 
   end
