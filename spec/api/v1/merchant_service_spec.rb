@@ -23,4 +23,15 @@ RSpec.describe 'Merchant api services' do
     expect(body[:data].length).to eq(19)
     expect(body[:data].last[:attributes][:name]).to eq(Merchant.last.name)
   end
+
+  it 'can return customized page length' do
+    create_list(:merchant, 39)
+
+    get '/api/v1/merchants?per_page=39'
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body[:data].length).to eq(39)
+
+  end
 end
