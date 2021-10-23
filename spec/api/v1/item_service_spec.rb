@@ -58,4 +58,27 @@ RSpec.describe 'item api endpoints' do
     expect(body[:data][:attributes]).to be_a(Hash)
   end
 
+  it 'can create an item' do
+    merchant = create(:merchant)
+    item_params = {
+      "name": "value1",
+      "description": "value2",
+      "unit_price": 100.99,
+      "merchant_id": merchant.id
+    }
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
+
+    body = JSON.parse(response.body, symbolize_names: true)
+    item = Item.last
+
+    expect(body[:data][:id]).to eq(item.id.to_s)
+    expect(body[:data][:type]).to eq('item')
+    expect(body[:data][:attributes][:name]).to eq(item.name)
+    expect(body[:data][:attributes][:description]).to eq(item.description)
+    expect(body[:data][:attributes][:unit_price]).to eq(item.unit_price)
+    expect(body[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
+
+  end
 end
