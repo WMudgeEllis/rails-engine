@@ -48,4 +48,19 @@ RSpec.describe ItemsSerializer do
     expect(response[:data].length).to eq(50)
   end
 
+  it '#item_show' do
+    merchant = create(:merchant)
+    create_list(:item, 39, merchant_id: merchant.id)
+    item = Item.all.sample
+    response = ItemsSerializer.item_show(item.id.to_s)
+
+    expect(response[:data][:id]).to eq(item.id.to_s)
+    expect(response[:data][:type]).to eq('item')
+    expect(response[:data][:attributes][:name]).to eq(item.name)
+    expect(response[:data][:attributes][:description]).to eq(item.description)
+    expect(response[:data][:attributes][:unit_price]).to eq(item.unit_price)
+    expect(response[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
+
+  end
+
 end

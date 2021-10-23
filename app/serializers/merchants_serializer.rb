@@ -1,53 +1,28 @@
-class MerchantsSerializer
+class MerchantsSerializer < ApiSerializer
 
   def self.merchant_index(page = nil, per_page = nil)
-    #move to model or other methods? APISerializer superclass?
     page ||= 1
     per_page ||= 20
     page_index = (page -1) * per_page
     api = { data: [] }
     merchants = Merchant.limit(per_page)
     merchants = Merchant.all[page_index..page_index + per_page -1] if page > 1
-    ##
     return api if merchants.nil?
-    merchants.each do |merchant|
-      #turn into merchant poro?
-      api[:data] << {
-        id: "#{merchant.id}",
-        type: 'merchant',
-        attributes: { name: "#{merchant.name}" }
-      }
-    end
+    merchants.each { |merchant| api[:data] << format_merchant(merchant) }
     api
   end
 
   def self.merchant_show(merchant_id)
     merchant = Merchant.find(merchant_id)
-    api = { data: {
-      id: "#{merchant.id}",
-      type: 'merchant',
-      attributes: {
-        name: merchant.name
-      }
-      }}
+    api = { data: format_merchant(merchant) }
   end
 
   def self.merchant_items(merchant_id)
     merchant = Merchant.find(merchant_id)
     items = merchant.items
     api = { data: [] }
-    items.each do |item|
-      api[:data] << {
-        id: item.id.to_s,
-        type: 'item',
-        attributes: {
-          name: item.name,
-          description: item.description,
-          unit_price: item.unit_price,
-          merchant_id: item.merchant_id
-        }
-      }
-    end
+    items.each { |item| api[:data] << format_item(item) }
     api
   end
+
 end

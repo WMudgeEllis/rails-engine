@@ -1,4 +1,4 @@
-class ItemsSerializer
+class ItemsSerializer < ApiSerializer
 
   def self.item_index(page = nil, per_page = nil)
     page ||= 1
@@ -8,20 +8,13 @@ class ItemsSerializer
     items = Item.limit(per_page)
     items = Item.all[page_index..page_index + per_page -1] if page > 1
     return api if items.nil?
-    items.each do |item|
-      api[:data] << {
-        id: "#{item.id}",
-        type: 'item',
-        attributes: {
-          name: item.name,
-          description: item.description,
-          unit_price: item.unit_price,
-          merchant_id: item.merchant_id
-         }
-      }
-    end
+    items.each { |item| api[:data] << format_item(item) }
     api
   end
 
+  def self.item_show(item_id)
+    item = Item.find(item_id)
+    { data: format_item(item) }
+  end
 
 end

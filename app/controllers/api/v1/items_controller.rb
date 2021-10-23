@@ -7,4 +7,7 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemsSerializer.item_index(page, per_page)
   end
 
+  def show
+    render json: ItemsSerializer.item_show(params[:id])
+  end
 end
