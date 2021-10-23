@@ -7,7 +7,6 @@ class ItemsSerializer
     api = { data: [] }
     items = Item.limit(per_page)
     items = Item.all[page_index..page_index + per_page -1] if page > 1
-    ##
     return api if items.nil?
     items.each do |item|
       api[:data] << {
