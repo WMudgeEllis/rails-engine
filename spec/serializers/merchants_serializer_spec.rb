@@ -39,7 +39,6 @@ RSpec.describe MerchantsSerializer do
     response = MerchantsSerializer.merchant_index(2, 50)
 
     expect(response[:data].length).to eq(50)
-
   end
 
 end
