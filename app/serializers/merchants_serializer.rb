@@ -31,4 +31,23 @@ class MerchantsSerializer
       }
       }}
   end
+
+  def self.merchant_items(merchant_id)
+    merchant = Merchant.find(merchant_id)
+    items = merchant.items
+    api = { data: [] }
+    items.each do |item|
+      api[:data] << {
+        id: item.id.to_s,
+        type: 'item',
+        attributes: {
+          name: item.name,
+          description: item.description,
+          unit_price: item.unit_price,
+          merchant_id: item.merchant_id
+        }
+      }
+    end
+    api
+  end
 end

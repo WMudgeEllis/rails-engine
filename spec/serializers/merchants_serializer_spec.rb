@@ -52,4 +52,23 @@ RSpec.describe MerchantsSerializer do
     expect(response[:data][:type]).to eq('merchant')
     expect(response[:data][:attributes][:name]).to eq(merchant.name)
   end
+
+  it '#merchant_items' do
+    merchant = create(:merchant)
+    create_list(:item, 5, merchant_id: merchant.id)
+    item = Item.first
+
+    response = MerchantsSerializer.merchant_items(merchant.id)
+
+    expect(response[:data]).to be_a(Array)
+    expect(response[:data].first[:id]).to eq(item.id.to_s)
+    expect(response[:data].first[:type]).to eq('item')
+    expect(response[:data].first).to have_key(:attributes)
+    expect(response[:data].first[:attributes]).to be_a(Hash)
+    expect(response[:data].first[:attributes][:name]).to eq(item.name)
+    expect(response[:data].first[:attributes][:description]).to eq(item.description)
+    expect(response[:data].first[:attributes][:unit_price]).to eq(item.unit_price)
+    expect(response[:data].first[:attributes][:merchant_id]).to eq(item.merchant_id)
+
+  end
 end
