@@ -8,7 +8,13 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def find
-    item = Item.name_search(params[:name])
+    if params[:name].present?
+      item = Item.name_search(params[:name].downcase)
+    elsif params[:min_price].present?
+      item = Item.min_price_search(params[:min_price])
+    elsif params[:max_price].present?
+      item = Item.max_price_search(params[:max_price])
+    end
     render json: ItemsSerializer.item_show(item.id)
   end
 

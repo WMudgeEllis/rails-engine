@@ -18,6 +18,15 @@ class Item < ApplicationRecord
   end
 
   def self.name_search(name)
-    Item.find_by('name LIKE ?', "%#{name}%")
+    Item.where('lower(name) LIKE ?', "%#{name.downcase}%")
+        .order(:name).first
+  end
+
+  def self.min_price_search(min_price)
+    Item.where('unit_price > ?', min_price).order(:name).first
+  end
+
+  def self.max_price_search(max_price)
+    Item.where('unit_price < ?', max_price).order(:name).first
   end
 end

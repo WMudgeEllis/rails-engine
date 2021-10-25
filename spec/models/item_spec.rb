@@ -30,4 +30,37 @@ RSpec.describe Item do
 
     expect(Item.name_search('West')).to eq(item)
   end
+
+  # it 'can find item by description' do
+  #   merchant = create(:merchant)
+  #   create_list(:item, 19, merchant_id: merchant.id)
+  #   item = create(:item, merchant_id: merchant.id, name: 'Westons awesome item', description: 'itz pretty kool')
+  #
+  #   expect(Item.name_search('itz')).to eq(item)
+  # end
+
+  it 'returns first alphabetical order if many are found' do
+    merchant = create(:merchant)
+    item1 = create(:item, merchant_id: merchant.id, name: 'Westons awesome item')
+    item2 = create(:item, merchant_id: merchant.id, name: 'Alpha West')
+    create_list(:item, 19, merchant_id: merchant.id)
+
+    expect(Item.name_search('West')).to eq(item2)
+  end
+
+  it 'can search by min price' do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id, unit_price: 900)
+    create_list(:item, 19, merchant_id: merchant.id)
+
+    expect(Item.min_price_search(100)).to eq(item)
+  end
+
+   it 'can search by max price' do
+     merchant = create(:merchant)
+     item = create(:item, merchant_id: merchant.id, unit_price: 5)
+     create_list(:item, 19, merchant_id: merchant.id)
+
+     expect(Item.max_price_search(9)).to eq(item)
+   end
 end

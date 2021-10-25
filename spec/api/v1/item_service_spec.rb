@@ -205,4 +205,28 @@ RSpec.describe 'item api endpoints' do
     expect(body[:data][:attributes]).to be_a(Hash)
     expect(body[:data][:attributes][:name]).to eq(item.name)
   end
+
+  it 'can search for an item by min price' do
+    merchant = create(:merchant)
+    create_list(:item, 10, merchant_id: merchant.id)
+    item = create(:item, unit_price: 200, merchant_id: merchant.id)
+
+    get '/api/v1/items/find?min_price=100.1'
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body[:data][:id]).to eq(item.id.to_s)
+  end
+
+  it 'can search for an item by max price' do
+    merchant = create(:merchant)
+    create_list(:item, 10, merchant_id: merchant.id)
+    item = create(:item, unit_price: 6, merchant_id: merchant.id)
+
+    get '/api/v1/items/find?max_price=9'
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body[:data][:id]).to eq(item.id.to_s)
+  end
 end
