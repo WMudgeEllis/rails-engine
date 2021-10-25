@@ -11,4 +11,8 @@
       render json: MerchantsSerializer.merchant_show(params[:id])
     end
 
+    def find
+      render json: MerchantsSerializer.merchant_find(params[:name])
+    end
+
   end

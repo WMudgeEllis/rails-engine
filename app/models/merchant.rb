@@ -3,6 +3,6 @@ class Merchant < ApplicationRecord
 
 
   def self.find_all(name)
-    where('lower(name) LIKE ?', "%#{name.downcase}%")
+    where('lower(name) LIKE ?', "%#{name.downcase}%").order(:name)
   end
 end

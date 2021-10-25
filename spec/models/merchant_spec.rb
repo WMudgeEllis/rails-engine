@@ -9,6 +9,6 @@ RSpec.describe Merchant do
     merchant1 = create(:merchant, name: 'Turing')
     merchant2 = create(:merchant, name: 'Ring world')
     create_list(:merchant, 10)
-    expect(Merchant.find_all('ring')).to eq([merchant1, merchant2])
+    expect(Merchant.find_all('ring')).to eq([merchant2, merchant1])
   end
 end

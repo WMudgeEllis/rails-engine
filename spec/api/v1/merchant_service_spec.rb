@@ -73,7 +73,23 @@ RSpec.describe 'Merchant api services' do
     expect(body[:data].first[:type]).to be_a(String)
     expect(body[:data].first).to have_key(:attributes)
     expect(body[:data].first[:attributes]).to be_a(Hash)
+  end
 
+  it 'can search all merchants by name' do
+    merchant1 = create(:merchant, name: 'Turing')
+    merchant2 = create(:merchant, name: 'Ring world')
+    create_list(:merchant, 10)
+
+    get '/api/v1/merchants/find_all?name=ring'
+
+    expect(response.status).to eq(200)
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body).to be_a(Hash)
+    expect(body[:data]).to be_a(Array)
+    expect(body[:data][0][:attributes]).to be_a(Hash)
+    expect(body[:data][0][:attributes][:name]).to eq(merchant2.name)
 
   end
 end
