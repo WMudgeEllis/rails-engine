@@ -1,4 +1,8 @@
 class Merchant < ApplicationRecord
   has_many :items
 
+
+  def self.find_all(name)
+    where('lower(name) LIKE ?', "%#{name.downcase}%")
+  end
 end
