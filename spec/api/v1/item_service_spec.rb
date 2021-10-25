@@ -152,7 +152,7 @@ RSpec.describe 'item api endpoints' do
     expect(response).to be_successful
 
     body = JSON.parse(response.body, symbolize_names: true)
-    
+
     expect(body).to be_a(Hash)
     expect(body).to have_key(:data)
     expect(body[:data]).to be_a(Hash)
@@ -162,5 +162,24 @@ RSpec.describe 'item api endpoints' do
     expect(body[:data][:type]).to be_a(String)
     expect(body[:data]).to have_key(:attributes)
     expect(body[:data][:attributes]).to be_a(Hash)
+  end
+
+  it 'can delete an item' do
+    merchant = create(:merchant)
+    item1 = create(:item, merchant_id: merchant.id)
+    item2 = create(:item, merchant_id: merchant.id)
+    customer = create(:customer)
+    invoice1 = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+    invoice2 = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+    item1.invoices << invoice1
+    item1.invoices << invoice2
+    item2.invoices << invoice2
+
+    delete "/api/v1//items/#{item1.id}"
+
+    expect(response.status).to eq(204)
+
+    expect(Item.all).to eq([item2])
+    expect(Invoice.all).to eq([invoice2])
   end
 end

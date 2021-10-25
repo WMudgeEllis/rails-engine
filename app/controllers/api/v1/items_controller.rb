@@ -29,6 +29,13 @@ class Api::V1::ItemsController < ApplicationController
     end
   end
 
+  def destroy
+    item = Item.find(params[:id])
+    invoices = item.invoices_only_item
+    invoices.each { |invoice| invoice.destroy }
+    item.destroy
+  end
+
   private
 
   def item_params
