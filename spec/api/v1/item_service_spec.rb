@@ -229,4 +229,10 @@ RSpec.describe 'item api endpoints' do
 
     expect(body[:data][:id]).to eq(item.id.to_s)
   end
+
+  it 'throws an error with too many params' do
+    get '/api/v1/items/find?max_price=9&name=wes'
+
+    expect(response.status).to eq(400)
+  end
 end
