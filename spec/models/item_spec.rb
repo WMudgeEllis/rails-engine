@@ -22,4 +22,12 @@ RSpec.describe Item do
 
     expect(item1.invoices_only_item).to eq([invoice1, invoice3])
   end
+
+  it 'can find an item by name' do
+    merchant = create(:merchant)
+    create_list(:item, 19, merchant_id: merchant.id)
+    item = create(:item, merchant_id: merchant.id, name: 'Westons awesome item')
+
+    expect(Item.name_search('West')).to eq(item)
+  end
 end

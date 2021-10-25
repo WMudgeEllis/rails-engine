@@ -7,6 +7,11 @@ class Api::V1::ItemsController < ApplicationController
     render json: ItemsSerializer.item_index(page, per_page)
   end
 
+  def find
+    item = Item.name_search(params[:name])
+    render json: ItemsSerializer.item_show(item.id)
+  end
+
   def show
     render json: ItemsSerializer.item_show(params[:id])
   end
@@ -16,7 +21,7 @@ class Api::V1::ItemsController < ApplicationController
     if item.save
       render json: ItemsSerializer.item_show(item.id), status: 201
     else
-      render json: {error: item.errors.full_messages.to_sentence}
+      render json: { error: item.errors.full_messages.to_sentence }
     end
   end
 

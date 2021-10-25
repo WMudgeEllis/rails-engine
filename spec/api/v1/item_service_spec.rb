@@ -175,7 +175,7 @@ RSpec.describe 'item api endpoints' do
     item1.invoices << invoice2
     item2.invoices << invoice2
 
-    delete "/api/v1//items/#{item1.id}"
+    delete "/api/v1/items/#{item1.id}"
 
     expect(response.status).to eq(204)
 
@@ -186,9 +186,9 @@ RSpec.describe 'item api endpoints' do
   it 'can search for an item by name' do
     merchant = create(:merchant)
     create_list(:item, 10, merchant_id: merchant.id)
-    item = create(:item, name: 'Westons awesome item')
+    item = create(:item, name: 'Westons awesome item', merchant_id: merchant.id)
 
-    get '/api/vi/items/find?name=West'
+    get '/api/v1/items/find?name=West'
 
     expect(response).to be_successful
 
@@ -203,6 +203,6 @@ RSpec.describe 'item api endpoints' do
     expect(body[:data][:type]).to be_a(String)
     expect(body[:data]).to have_key(:attributes)
     expect(body[:data][:attributes]).to be_a(Hash)
-    expect(body[:data][:name]).to eq(item.name)
+    expect(body[:data][:attributes][:name]).to eq(item.name)
   end
 end
