@@ -12,7 +12,8 @@ class Api::V1::ItemsController < ApplicationController
       render json: { error: {} }, status: 400
     elsif params[:name].present?
       item = Item.name_search(params[:name].downcase)
-      render json: ItemsSerializer.item_show(item.id)
+      render json: ItemsSerializer.item_show(item.id) if item
+      render json: { data: {} } if item.nil?
     elsif params[:min_price].present?
       item = Item.min_price_search(params[:min_price])
       render json: ItemsSerializer.item_show(item.id) if item
