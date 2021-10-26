@@ -58,6 +58,5 @@ RSpec.describe Merchant do
 
     expect(Merchant.top_merchants(2)).to eq([merchant3, merchant2])
     expect(Merchant.top_merchants(3)).to eq([merchant3, merchant2, merchant1])
-    expect(Merchant.top_merchants(4)).to eq([merchant3, merchant2, merchant1, merchant4])
   end
 end
