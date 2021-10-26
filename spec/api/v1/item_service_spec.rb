@@ -235,4 +235,34 @@ RSpec.describe 'item api endpoints' do
 
     expect(response.status).to eq(400)
   end
+
+  it 'return 400 when min price is negative' do
+    get '/api/v1/items/find?min_price=-1'
+
+    expect(response.status).to eq(400)
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body).to have_key(:error)
+  end
+
+  it 'return 400 when max price is negative' do
+    get '/api/v1/items/find?max_price=-1'
+
+    expect(response.status).to eq(400)
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body).to have_key(:error)
+  end
+
+  it 'returns empty with no params' do
+    get '/api/v1/items/find'
+
+    expect(response).to be_successful
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body).to have_key(:data)
+  end
 end
