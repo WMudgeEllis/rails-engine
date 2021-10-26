@@ -11,7 +11,6 @@ RSpec.describe 'revenue endpoints' do
     create(:transaction, invoice_id: @invoice.id, result: 'success')
     @ii = create(:invoice_item, item_id: @item1.id, invoice_id: @invoice.id, quantity: 10, unit_price: 1.0)
     @ii2 = create(:invoice_item, item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 2.2)
-
   end
 
   it 'can return a merchants revenue' do
@@ -29,7 +28,7 @@ RSpec.describe 'revenue endpoints' do
     expect(body[:data]).to have_key(:attributes)
     expect(body[:data][:attributes]).to be_a(Hash)
     expect(body[:data][:attributes]).to have_key(:revenue)
-    expect(body[:data][:attributes][:revenue]).to eq(14.4)
+    expect(body[:data][:attributes][:revenue]).to be_a(Float)
   end
 
 end
