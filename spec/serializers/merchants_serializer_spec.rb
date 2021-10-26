@@ -69,6 +69,27 @@ RSpec.describe MerchantsSerializer do
     expect(response[:data].first[:attributes][:description]).to eq(item.description)
     expect(response[:data].first[:attributes][:unit_price]).to eq(item.unit_price)
     expect(response[:data].first[:attributes][:merchant_id]).to eq(item.merchant_id)
+  end
 
+  describe 'queries' do
+    before :each do
+      @merchant = create(:merchant)
+      @customer = create(:customer)
+      @item1 = create(:item, merchant_id: @merchant.id)
+      @item2 = create(:item, merchant_id: @merchant.id)
+      @invoice = create(:invoice, customer_id: @customer.id, merchant_id: @merchant.id, status: 'shipped')
+      create(:transaction, invoice_id: @invoice.id, result: 'success')
+      @ii = create(:invoice_item, item_id: @item1.id, invoice_id: @invoice.id, quantity: 10, unit_price: 1.0)
+      @ii2 = create(:invoice_item, item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 2.2)
+    end
+
+    it '#merchant_revenue' do
+      allow_any_instance_of(Merchant).to receive(:total_revenue).and_return(14.4)
+      response = MerchantsSerializer.merchant_revenue(@merchant)
+
+      expect(response[:data][:id]).to eq(@merchant.id.to_s)
+      expect(response[:data][:type]).to eq('merchant_revenue')
+      expect(response[:data][:attributes][:revenue]).to eq(14.4)
+    end
   end
 end
