@@ -84,6 +84,7 @@ RSpec.describe MerchantsSerializer do
     end
 
     it '#merchant_revenue' do
+      allow_any_instance_of(Merchant).to receive(:total_revenue).and_return(14.4)
       response = MerchantsSerializer.merchant_revenue(@merchant)
 
       expect(response[:data][:id]).to eq(@merchant.id.to_s)

@@ -5,4 +5,8 @@ class Merchant < ApplicationRecord
   def self.find_all(name)
     where('lower(name) LIKE ?', "%#{name.downcase}%").order(:name)
   end
+
+  def total_revenue
+
+  end
 end
