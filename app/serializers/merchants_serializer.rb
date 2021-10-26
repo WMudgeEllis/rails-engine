@@ -31,17 +31,4 @@ class MerchantsSerializer < ApiSerializer
     merchants.each { |merchant| api[:data] << format_merchant(merchant) }
     api
   end
-
-  def self.merchant_revenue(merchant)
-    {
-      data: {
-        id: merchant.id.to_s,
-        type: 'merchant_revenue',
-        attributes: {
-          revenue: merchant.total_revenue
-        }
-      }
-    }
-  end
-
 end
