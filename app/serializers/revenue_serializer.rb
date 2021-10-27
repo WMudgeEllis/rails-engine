@@ -27,4 +27,19 @@ class RevenueSerializer
     end
     api
   end
+
+  def self.unshipped_revenue(num_results)
+    api = { data: [] }
+    invoices = Invoice.unshipped_orders(num_results)
+    invoice.each do |invoice|
+      api[:data] << {
+        id: invoice.id.to_s,
+        type: 'unshipped_order',
+        attributes:{
+          potential_revenue: invoice.potential_revenue
+        }
+      }
+    end
+    api
+  end
 end

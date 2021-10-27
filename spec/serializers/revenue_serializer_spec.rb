@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe RevenueSerializer do
 
-
   before :each do
     @merchant = create(:merchant)
     @merchant2 = create(:merchant)
@@ -12,11 +11,17 @@ RSpec.describe RevenueSerializer do
     @item3 = create(:item, merchant_id: @merchant2.id)
     @invoice = create(:invoice, customer_id: @customer.id, merchant_id: @merchant.id, status: 'shipped')
     @invoice2 = create(:invoice, customer_id: @customer.id, merchant_id: @merchant2.id, status: 'shipped')
-    create(:transaction, invoice_id: @invoice.id, result: 'success')
-    create(:transaction, invoice_id: @invoice2.id, result: 'success')
+    @invoice3 = create(:invoice, customer_id: @customer.id, merchant_id: @merchant2.id, status: 'not shipped')
+    @invoice4 = create(:invoice, customer_id: @customer.id, merchant_id: @merchant2.id, status: 'not shipped')
+    create(:transaction, invoice_id: @invoice.id)
+    create(:transaction, invoice_id: @invoice2.id)
+    create(:transaction, invoice_id: @invoice3.id)
+    create(:transaction, invoice_id: @invoice4.id)
     create(:invoice_item, item_id: @item1.id, invoice_id: @invoice.id, quantity: 10, unit_price: 1.0)
     create(:invoice_item, item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 2.2)
     create(:invoice_item, item_id: @item3.id, invoice_id: @invoice2.id, quantity: 1, unit_price: 1)
+    create(:invoice_item, item_id: @item3.id, invoice_id: @invoice3.id, quantity: 1, unit_price: 1)
+    create(:invoice_item, item_id: @item3.id, invoice_id: @invoice4.id, quantity: 11, unit_price: 1)
   end
 
   it '#merchant_revenue' do
@@ -36,5 +41,14 @@ RSpec.describe RevenueSerializer do
     expect(response[:data][0][:type]).to eq('merchant_name_revenue')
     expect(response[:data][0][:attributes][:name]).to eq(@merchant.name)
     expect(response[:data][0][:attributes][:revenue]).to eq(14.4)
+  end
+
+  it '#unshipped_revenue' do
+    response = RevenueSerializer.unshipped_revenue(2)
+
+    expect(response[:data].length).to eq(2)
+    expect(response[:data][0][:id]).to eq(@invoice3.id.to_s)
+    expect(response[:data][0][:type]).to eq('unshipped_order')
+    expect(response[:data][0][:attributes][:potential_revenue]).to eq(11)
   end
 end
