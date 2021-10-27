@@ -21,9 +21,9 @@ RSpec.describe Merchant do
     invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id, status: 'shipped')
     invoice2 = create(:invoice, customer_id: customer.id, merchant_id: merchant.id, status: 'pending')
     invoice3 = create(:invoice, customer_id: customer.id, merchant_id: merchant.id, status: 'shipped')
-    create(:transaction, invoice_id: invoice.id, result: 'success')
+    create(:transaction, invoice_id: invoice.id)
     create(:transaction, invoice_id: invoice.id, result: 'failed')
-    create(:transaction, invoice_id: invoice2.id, result: 'success')
+    create(:transaction, invoice_id: invoice2.id)
     create(:transaction, invoice_id: invoice3.id, result: 'failed')
     ii = create(:invoice_item, item_id: item1.id, invoice_id: invoice.id, quantity: 10, unit_price: 1.0)
     ii2 = create(:invoice_item, item_id: item2.id, invoice_id: invoice.id, quantity: 2, unit_price: 2.2)
@@ -31,5 +31,23 @@ RSpec.describe Merchant do
     ii4 = create(:invoice_item, item_id: item1.id, invoice_id: invoice3.id, quantity: 1, unit_price: 3.14159)
 
     expect(merchant.total_revenue).to eq(14.4)
+  end
+
+  it 'can order merchants by revenue' do
+    merchant2 = create(:merchant)
+    merchant = create(:merchant)
+    customer = create(:customer)
+    item1 = create(:item, merchant_id: merchant.id)
+    item2 = create(:item, merchant_id: merchant.id)
+    item3 = create(:item, merchant_id: merchant2.id)
+    invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id, status: 'shipped')
+    invoice2 = create(:invoice, customer_id: customer.id, merchant_id: merchant2.id, status: 'shipped')
+    create(:transaction, invoice_id: invoice.id, result: 'success')
+    create(:transaction, invoice_id: invoice2.id, result: 'success')
+    create(:invoice_item, item_id: item1.id, invoice_id: invoice.id, quantity: 10, unit_price: 1.0)
+    create(:invoice_item, item_id: item2.id, invoice_id: invoice.id, quantity: 2, unit_price: 2.2)
+    create(:invoice_item, item_id: item3.id, invoice_id: invoice2.id, quantity: 1, unit_price: 1)
+
+    expect(Merchant.top_merchants(2)).to eq([merchant, merchant2])
   end
 end
