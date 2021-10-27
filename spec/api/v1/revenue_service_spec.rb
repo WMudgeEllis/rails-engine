@@ -11,11 +11,17 @@ RSpec.describe 'revenue endpoints' do
     @item3 = create(:item, merchant_id: @merchant2.id)
     @invoice = create(:invoice, customer_id: @customer.id, merchant_id: @merchant.id, status: 'shipped')
     @invoice2 = create(:invoice, customer_id: @customer.id, merchant_id: @merchant2.id, status: 'shipped')
-    create(:transaction, invoice_id: @invoice.id, result: 'success')
-    create(:transaction, invoice_id: @invoice2.id, result: 'success')
+    @invoice3 = create(:invoice, customer_id: @customer.id, merchant_id: @merchant2.id, status: 'not shipped')
+    @invoice4 = create(:invoice, customer_id: @customer.id, merchant_id: @merchant2.id, status: 'not shipped')
+    create(:transaction, invoice_id: @invoice.id)
+    create(:transaction, invoice_id: @invoice2.id)
+    create(:transaction, invoice_id: @invoice3.id)
+    create(:transaction, invoice_id: @invoice4.id)
     create(:invoice_item, item_id: @item1.id, invoice_id: @invoice.id, quantity: 10, unit_price: 1.0)
     create(:invoice_item, item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 2.2)
     create(:invoice_item, item_id: @item3.id, invoice_id: @invoice2.id, quantity: 1, unit_price: 1)
+    create(:invoice_item, item_id: @item3.id, invoice_id: @invoice3.id, quantity: 1, unit_price: 1)
+    create(:invoice_item, item_id: @item3.id, invoice_id: @invoice4.id, quantity: 1, unit_price: 1)
   end
 
   it 'can return a merchants revenue' do
@@ -61,5 +67,25 @@ RSpec.describe 'revenue endpoints' do
     get '/api/v1/revenue/merchants'
 
     expect(response.status).to eq(400)
+  end
+
+  it 'can get revenue of unshipped orders' do
+    get '/api/v1/revenue/unshipped?quantity=2'
+
+    expect(response).to be_successful
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body).to have_key(:data)
+    expect(body[:data]).to be_a(Array)
+    expect(body[:data].length).to eq(2)
+    expect(body[:data][0]).to have_key(:id)
+    expect(body[:data][0][:id]).to be_a(String)
+    expect(body[:data][0]).to have_key(:type)
+    expect(body[:data][0][:type]).to be_a(String)
+    expect(body[:data][0]).to have_key(:attributes)
+    expect(body[:data][0][:attributes]).to be_a(Hash)
+    expect(body[:data][0][:attributes]).to have_key(:potential_revenue)
+    expect(body[:data][0][:attributes][:potential_revenue]).to be_a(Float)
   end
 end

@@ -7,10 +7,18 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def most_revenue
-    if params[:quantity].present?
+    if params[:quantity]
       render json: RevenueSerializer.most_revenue(params[:quantity])
     else
       render json: { error: {} }, status: 400
+    end
+  end
+
+  def unshipped_revenue
+    if params[:quantity] && params[:quantity].to_i > 0
+      render json: RevenueSerializer.unshipped_revenue(params[:quantity])
+    else
+      render json: { error: {} }
     end
   end
 end
