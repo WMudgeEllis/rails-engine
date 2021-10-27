@@ -15,7 +15,7 @@ RSpec.describe 'revenue endpoints' do
     create(:transaction, invoice_id: @invoice2.id, result: 'success')
     create(:invoice_item, item_id: @item1.id, invoice_id: @invoice.id, quantity: 10, unit_price: 1.0)
     create(:invoice_item, item_id: @item2.id, invoice_id: @invoice.id, quantity: 2, unit_price: 2.2)
-    create(:invoice_item, item_id: @item3.id, invoice_id: @invoice.id, quantity: 2, unit_price: 2.2)
+    create(:invoice_item, item_id: @item3.id, invoice_id: @invoice2.id, quantity: 1, unit_price: 1)
   end
 
   it 'can return a merchants revenue' do
@@ -43,7 +43,7 @@ RSpec.describe 'revenue endpoints' do
     expect(response).to be_successful
 
     body = JSON.parse(response.body, symbolize_names: true)
-
+    # require "pry"; binding.pry
     expect(body).to have_key(:data)
     expect(body[:data]).to be_a(Array)
     expect(body[:data].length).to eq(2)

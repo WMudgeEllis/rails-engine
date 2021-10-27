@@ -8,11 +8,11 @@ class Merchant < ApplicationRecord
   end
 
   def self.top_merchants(num_results)
-    require "pry"; binding.pry
-    wip = Merchant.joins(invoices: [:transactions, :invoice_items])
+    Merchant.joins(invoices: [:transactions, :invoice_items])
             .where(transactions: {result: 'success'})
             .where(invoices: {status: 'shipped'})
-            .select('merchants.*, unit_price * quantity AS revenue')
+            .select('merchants.*, SUM(unit_price * quantity) AS revenue')
+            .group('merchants.id')
             .order(revenue: :desc)
             .limit(num_results)
   end

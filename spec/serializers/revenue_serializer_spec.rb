@@ -30,7 +30,7 @@ RSpec.describe RevenueSerializer do
 
   it '#most_revenue' do
     response = RevenueSerializer.most_revenue(2)
-    require "pry"; binding.pry
+
     expect(response[:data].length).to eq(2)
     expect(response[:data][0][:id]).to eq(@merchant.id.to_s)
     expect(response[:data][0][:type]).to eq('merchant_name_revenue')
