@@ -43,7 +43,7 @@ RSpec.describe 'revenue endpoints' do
     expect(response).to be_successful
 
     body = JSON.parse(response.body, symbolize_names: true)
-    # require "pry"; binding.pry
+
     expect(body).to have_key(:data)
     expect(body[:data]).to be_a(Array)
     expect(body[:data].length).to eq(2)
@@ -55,5 +55,11 @@ RSpec.describe 'revenue endpoints' do
     expect(body[:data][0][:attributes]).to be_a(Hash)
     expect(body[:data][0][:attributes]).to have_key(:revenue)
     expect(body[:data][0][:attributes][:revenue]).to be_a(Float)
+  end
+
+  it 'requires a param for top merchants' do
+    get '/api/v1/revenue/merchants'
+
+    expect(response.status).to eq(400)
   end
 end

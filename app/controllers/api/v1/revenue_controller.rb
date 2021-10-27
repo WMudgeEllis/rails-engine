@@ -7,6 +7,10 @@ class Api::V1::RevenueController < ApplicationController
   end
 
   def most_revenue
-    render json: RevenueSerializer.most_revenue(params[:quantity])
+    if params[:quantity].present?
+      render json: RevenueSerializer.most_revenue(params[:quantity])
+    else
+      render json: { error: {} }, status: 400
+    end
   end
 end
