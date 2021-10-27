@@ -47,7 +47,7 @@ RSpec.describe RevenueSerializer do
     response = RevenueSerializer.unshipped_revenue(2)
 
     expect(response[:data].length).to eq(2)
-    expect(response[:data][0][:id]).to eq(@invoice3.id.to_s)
+    expect(response[:data][0][:id]).to eq(@invoice4.id.to_s)
     expect(response[:data][0][:type]).to eq('unshipped_order')
     expect(response[:data][0][:attributes][:potential_revenue]).to eq(11)
   end

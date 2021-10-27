@@ -88,4 +88,14 @@ RSpec.describe 'revenue endpoints' do
     expect(body[:data][0][:attributes]).to have_key(:potential_revenue)
     expect(body[:data][0][:attributes][:potential_revenue]).to be_a(Float)
   end
+
+  it 'returns an error if quantity is 0 or less' do
+    get '/api/v1/revenue/unshipped?quantity=0'
+
+    expect(response).to_not be_successful
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body).to have_key(:error)
+  end
 end
