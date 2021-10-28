@@ -55,7 +55,6 @@ class RevenueSerializer < ApiSerializer
             unit_price: item.unit_price,
             merchant_id: item.merchant_id,
             revenue: item.revenue
-
           }
         }
       end

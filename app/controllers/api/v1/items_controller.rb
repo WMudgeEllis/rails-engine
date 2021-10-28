@@ -39,7 +39,6 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
-    # require "pry"; binding.pry
     item = Item.find(params[:id])
     if item.update(item_params)
       render json: ItemsSerializer.item_show(item.id)
