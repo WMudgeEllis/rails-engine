@@ -14,21 +14,23 @@ class MerchantsSerializer < ApiSerializer
 
   def self.merchant_show(merchant_id)
     merchant = Merchant.find(merchant_id)
-    api = { data: format_merchant(merchant) }
+     {
+       data: format_merchant(merchant)
+     }
   end
 
   def self.merchant_items(merchant_id)
     merchant = Merchant.find(merchant_id)
     items = merchant.items
-    api = { data: [] }
-    items.each { |item| api[:data] << format_item(item) }
-    api
+    {
+      data: items.map { |item| format_item(item) }
+    }
   end
 
   def self.merchant_find(name)
-    api = { data: [] }
     merchants = Merchant.find_all(name)
-    merchants.each { |merchant| api[:data] << format_merchant(merchant) }
-    api
+    {
+      data: merchants.map { |merchant| format_merchant(merchant) }
+    }
   end
 end

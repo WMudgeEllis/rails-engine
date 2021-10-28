@@ -14,23 +14,25 @@ class Item < ApplicationRecord
     ids = id_num_items.filter_map do |key, value|
       key if value == 1
     end
+    # require "pry"; binding.pry
     Invoice.find(ids)
   end
 
   def self.name_search(name)
-    Item.where('lower(name) LIKE ?', "%#{name.downcase}%")
+    self.where('lower(name) LIKE ?', "%#{name.downcase}%")
         .order(:name).first
   end
 
   def self.min_price_search(min_price)
-    Item.where('unit_price > ?', min_price).order(:name).first
+    self.where('unit_price > ?', min_price).order(:name).first
   end
 
   def self.max_price_search(max_price)
-    Item.where('unit_price < ?', max_price).order(:name).first
+    self.where('unit_price < ?', max_price).order(:name).first
   end
 
   def self.most_revenue(num_results = 10)
+    num_results ||= 10
     self.joins(:invoices, invoices: :transactions)
         .where(transactions: {result: :success})
         .where(invoices: {status: :shipped})
