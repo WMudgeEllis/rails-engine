@@ -29,4 +29,14 @@ class Item < ApplicationRecord
   def self.max_price_search(max_price)
     Item.where('unit_price < ?', max_price).order(:name).first
   end
+
+  def self.most_revenue(num_results = 10)
+    self.joins(:invoices, invoices: :transactions)
+        .where(transactions: {result: :success})
+        .where(invoices: {status: :shipped})
+        .select('items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue')
+        .group('items.id')
+        .order(revenue: :desc)
+        .limit(num_results)
+  end
 end

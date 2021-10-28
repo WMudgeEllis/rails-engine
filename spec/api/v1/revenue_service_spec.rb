@@ -70,6 +70,8 @@ RSpec.describe 'revenue endpoints' do
   end
 
   it 'can get revenue of unshipped orders' do
+    create_list(:item, 10, merchant_id: @merchant.id)
+
     get '/api/v1/revenue/unshipped?quantity=2'
 
     expect(response).to be_successful
@@ -97,5 +99,42 @@ RSpec.describe 'revenue endpoints' do
     body = JSON.parse(response.body, symbolize_names: true)
 
     expect(body).to have_key(:error)
+  end
+
+  it 'can find items ranked by revenue' do
+    get '/api/v1/revenue/items?quantity=3'
+
+    expect(response).to be_successful
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body).to have_key(:data)
+    expect(body[:data]).to be_a(Array)
+    expect(body[:data].length).to eq(3)
+    expect(body[:data][0]).to have_key(:id)
+    expect(body[:data][0][:id]).to be_a(String)
+    expect(body[:data][0]).to have_key(:type)
+    expect(body[:data][0][:type]).to be_a(String)
+    expect(body[:data][0]).to have_key(:attributes)
+    expect(body[:data][0][:attributes]).to be_a(Hash)
+    expect(body[:data][0][:attributes]).to have_key(:name)
+    expect(body[:data][0][:attributes][:name]).to be_a(String)
+
+    expect(body[:data][0][:attributes]).to have_key(:description)
+    expect(body[:data][0][:attributes][:description]).to be_a(String)
+    expect(body[:data][0][:attributes]).to have_key(:unit_price)
+    expect(body[:data][0][:attributes][:unit_price]).to be_a(Float)
+    expect(body[:data][0][:attributes]).to have_key(:merchant_id)
+  end
+
+  it 'defaults to 10' do
+    create_list(:item, 10, merchant_id: @merchant.id)
+    get '/api/v1/revenue/items'
+
+    expect(response).to be_successful
+
+    body = JSON.parse(response.body, symbolize_names: true)
+
+    expect(body[:data].length).to eq(10)
   end
 end

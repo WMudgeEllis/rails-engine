@@ -51,4 +51,17 @@ RSpec.describe RevenueSerializer do
     expect(response[:data][0][:type]).to eq('unshipped_order')
     expect(response[:data][0][:attributes][:potential_revenue]).to eq(11)
   end
+
+  it '#item_revenue_list' do
+    response = RevenueSerializer.item_revenue_list(2)
+
+    expect(response[:data].length).to eq(2)
+    expect(response[:data][0][:id]).to eq(@item1.id.to_s)
+    expect(response[:data][0][:type]).to eq('item_revenue')
+    expect(response[:data][0][:attributes][:name]).to eq(@item1.name)
+    expect(response[:data][0][:attributes][:description]).to eq(@item1.description)
+    expect(response[:data][0][:attributes][:unit_price]).to eq(@item1.unit_price)
+    expect(response[:data][0][:attributes][:merchant_id]).to eq(@item1.merchant_id)
+    expect(response[:data][0][:attributes][:revenue]).to eq(10)
+  end
 end

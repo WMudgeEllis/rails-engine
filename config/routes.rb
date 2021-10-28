@@ -11,8 +11,9 @@ Rails.application.routes.draw do
         get '/items', to: 'merchant_items#index'
       end
       get '/revenue/merchants/:id', to: 'revenue#merchant_revenue'
-      get '/revenue/merchants', to: 'revenue#most_revenue'
+      get '/revenue/merchants', to: 'revenue#merchant_revenue_list'
       get '/revenue/unshipped', to: 'revenue#unshipped_revenue'
+      get '/revenue/items', to: 'revenue#item_revenue_list'
     end
   end
 end

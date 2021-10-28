@@ -31,14 +31,6 @@ RSpec.describe Item do
     expect(Item.name_search('West')).to eq(item)
   end
 
-  # it 'can find item by description' do
-  #   merchant = create(:merchant)
-  #   create_list(:item, 19, merchant_id: merchant.id)
-  #   item = create(:item, merchant_id: merchant.id, name: 'Westons awesome item', description: 'itz pretty kool')
-  #
-  #   expect(Item.name_search('itz')).to eq(item)
-  # end
-
   it 'returns first alphabetical order if many are found' do
     merchant = create(:merchant)
     item1 = create(:item, merchant_id: merchant.id, name: 'Westons awesome item')
@@ -62,5 +54,25 @@ RSpec.describe Item do
      create_list(:item, 19, merchant_id: merchant.id)
 
      expect(Item.max_price_search(9)).to eq(item)
+   end
+
+   it 'can return list of items with highest revenue' do
+     merchant = create(:merchant)
+     item = create(:item, merchant_id: merchant.id)
+     item2 = create(:item, merchant_id: merchant.id)
+     item3 = create(:item, merchant_id: merchant.id)
+     customer = create(:customer)
+     invoice = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+     invoice2 = create(:invoice, customer_id: customer.id, merchant_id: merchant.id)
+     create(:transaction, invoice_id: invoice.id)
+     create(:transaction, invoice_id: invoice2.id)
+
+     create(:invoice_item, invoice_id: invoice.id, item_id: item.id, quantity: 1, unit_price:1)
+     create(:invoice_item, invoice_id: invoice.id, item_id: item2.id, quantity: 2, unit_price:2)
+     create(:invoice_item, invoice_id: invoice.id, item_id: item3.id, quantity: 3, unit_price:1)
+     create(:invoice_item, invoice_id: invoice2.id, item_id: item3.id, quantity: 3, unit_price:1)
+
+     expect(Item.most_revenue(2)).to eq([item3, item2])
+     expect(Item.most_revenue(1)[0].revenue).to eq(6)
    end
 end
