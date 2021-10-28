@@ -1,6 +1,5 @@
-require "rails_helper"
-
+require 'rails_helper'
 
 RSpec.describe Transaction do
-  it { should belong_to(:invoice)}
+  it { should belong_to(:invoice) }
 end

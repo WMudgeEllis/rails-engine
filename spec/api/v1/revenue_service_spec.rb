@@ -1,7 +1,6 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe 'revenue endpoints' do
-
   before :each do
     @merchant = create(:merchant)
     @merchant2 = create(:merchant)
@@ -41,7 +40,6 @@ RSpec.describe 'revenue endpoints' do
     expect(body[:data][:attributes]).to have_key(:revenue)
     expect(body[:data][:attributes][:revenue]).to be_a(Float)
   end
-
 
   it 'can return merchants in order of revenue' do
     get '/api/v1/revenue/merchants?quantity=2'
@@ -134,7 +132,7 @@ RSpec.describe 'revenue endpoints' do
 
   it 'defaults to 10' do
     items = create_list(:item, 10, merchant_id: @merchant.id)
-    items.each { |item| create(:invoice_item, item_id:item.id, invoice_id: @invoice.id) }
+    items.each { |item| create(:invoice_item, item_id: item.id, invoice_id: @invoice.id) }
     get '/api/v1/revenue/items'
 
     expect(response).to be_successful

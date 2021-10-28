@@ -5,14 +5,13 @@ class Invoice < ApplicationRecord
   has_many :items, through: :invoice_items
   has_many :transactions
 
-
   def self.unshipped_orders(num_results = 10)
-    self.joins(:invoice_items, :transactions)
-        .where(transactions: { result: 'success' })
-        .where.not(invoices: {status: 'shipped'})
-        .select('invoices.*, SUM(quantity * unit_price) AS potential_revenue')
-        .group('invoices.id')
-        .order(potential_revenue: :desc)
-        .limit(num_results)
+    joins(:invoice_items, :transactions)
+      .where(transactions: { result: 'success' })
+      .where.not(invoices: { status: 'shipped' })
+      .select('invoices.*, SUM(quantity * unit_price) AS potential_revenue')
+      .group('invoices.id')
+      .order(potential_revenue: :desc)
+      .limit(num_results)
   end
 end

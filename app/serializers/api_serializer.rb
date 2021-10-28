@@ -1,5 +1,4 @@
 class ApiSerializer
-
   def self.format_item(item)
     {
       id: item.id.to_s,
@@ -22,5 +21,4 @@ class ApiSerializer
       }
     }
   end
-
 end

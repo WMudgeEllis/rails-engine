@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe 'Merchant api services' do
   it 'can return a set of merchants' do
@@ -47,7 +47,7 @@ RSpec.describe 'Merchant api services' do
     expect(body).to have_key(:data)
     expect(body[:data]).to be_a(Hash)
     expect(body[:data]).to have_key(:id)
-    expect(body[:data][:id]).to eq("#{merchant.id}")
+    expect(body[:data][:id]).to eq(merchant.id.to_s)
     expect(body[:data]).to have_key(:type)
     expect(body[:data][:type]).to be_a(String)
     expect(body[:data]).to have_key(:attributes)
@@ -90,6 +90,5 @@ RSpec.describe 'Merchant api services' do
     expect(body[:data]).to be_a(Array)
     expect(body[:data][0][:attributes]).to be_a(Hash)
     expect(body[:data][0][:attributes][:name]).to eq(merchant2.name)
-
   end
 end

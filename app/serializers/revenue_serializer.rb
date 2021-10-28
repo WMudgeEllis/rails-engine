@@ -1,5 +1,4 @@
 class RevenueSerializer < ApiSerializer
-
   def self.merchant_revenue(merchant)
     {
       data: {
@@ -16,14 +15,14 @@ class RevenueSerializer < ApiSerializer
     merchants = Merchant.top_merchants(num_results)
     {
       data: merchants.map do |merchant|
-          {
-            id: merchant.id.to_s,
-            type: 'merchant_name_revenue',
-            attributes: {
-              name: merchant.name,
-              revenue: merchant.revenue
-            }
+        {
+          id: merchant.id.to_s,
+          type: 'merchant_name_revenue',
+          attributes: {
+            name: merchant.name,
+            revenue: merchant.revenue
           }
+        }
       end
     }
   end
@@ -35,7 +34,7 @@ class RevenueSerializer < ApiSerializer
         {
           id: invoice.id.to_s,
           type: 'unshipped_order',
-          attributes:{
+          attributes: {
             potential_revenue: invoice.potential_revenue
           }
         }

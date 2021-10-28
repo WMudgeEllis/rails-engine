@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe Invoice do
   describe 'relationships' do
@@ -18,7 +18,7 @@ RSpec.describe Invoice do
       create(:transaction, invoice_id: invoice1.id)
       create(:transaction, invoice_id: invoice2.id)
       create(:transaction, invoice_id: invoice3.id)
-      create(:invoice_item, item_id: item.id, invoice_id: invoice1.id, quantity: 1, unit_price: 10000.0)
+      create(:invoice_item, item_id: item.id, invoice_id: invoice1.id, quantity: 1, unit_price: 10_000.0)
       create(:invoice_item, item_id: item.id, invoice_id: invoice2.id, quantity: 7, unit_price: 1.0)
       create(:invoice_item, item_id: item.id, invoice_id: invoice3.id, quantity: 2, unit_price: 3.0)
       create(:invoice_item, item_id: item.id, invoice_id: invoice3.id, quantity: 1, unit_price: 3.0)

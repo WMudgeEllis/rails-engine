@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe ItemsSerializer do
   it '#item_index' do
@@ -60,7 +60,5 @@ RSpec.describe ItemsSerializer do
     expect(response[:data][:attributes][:description]).to eq(item.description)
     expect(response[:data][:attributes][:unit_price]).to eq(item.unit_price)
     expect(response[:data][:attributes][:merchant_id]).to eq(item.merchant_id)
-
   end
-
 end

@@ -15,26 +15,26 @@ class Item < ApplicationRecord
   end
 
   def self.name_search(name)
-    self.where('lower(name) LIKE ?', "%#{name.downcase}%")
-        .order(:name).first
+    where('lower(name) LIKE ?', "%#{name.downcase}%")
+      .order(:name).first
   end
 
   def self.min_price_search(min_price)
-    self.where('unit_price > ?', min_price).order(:name).first
+    where('unit_price > ?', min_price).order(:name).first
   end
 
   def self.max_price_search(max_price)
-    self.where('unit_price < ?', max_price).order(:name).first
+    where('unit_price < ?', max_price).order(:name).first
   end
 
   def self.most_revenue(num_results = 10)
     num_results ||= 10
-    self.joins(:invoices, invoices: :transactions)
-        .where(transactions: {result: :success})
-        .where(invoices: {status: :shipped})
-        .select('items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue')
-        .group('items.id')
-        .order(revenue: :desc)
-        .limit(num_results)
+    joins(:invoices, invoices: :transactions)
+      .where(transactions: { result: :success })
+      .where(invoices: { status: :shipped })
+      .select('items.*, SUM(invoice_items.unit_price * invoice_items.quantity) AS revenue')
+      .group('items.id')
+      .order(revenue: :desc)
+      .limit(num_results)
   end
 end

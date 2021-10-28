@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe MerchantsSerializer do
   it '#merchant_index' do
@@ -48,7 +48,7 @@ RSpec.describe MerchantsSerializer do
 
     response = MerchantsSerializer.merchant_show(merchant.id)
 
-    expect(response[:data][:id]).to eq("#{merchant.id}")
+    expect(response[:data][:id]).to eq(merchant.id.to_s)
     expect(response[:data][:type]).to eq('merchant')
     expect(response[:data][:attributes][:name]).to eq(merchant.name)
   end

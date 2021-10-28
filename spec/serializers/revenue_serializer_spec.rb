@@ -1,7 +1,6 @@
-require "rails_helper"
+require 'rails_helper'
 
 RSpec.describe RevenueSerializer do
-
   before :each do
     @merchant = create(:merchant)
     @merchant2 = create(:merchant)
