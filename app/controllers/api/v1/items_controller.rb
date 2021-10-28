@@ -40,8 +40,13 @@ class Api::V1::ItemsController < ApplicationController
   end
 
   def update
+    # require "pry"; binding.pry
     item = Item.find(params[:id])
-    render json: ItemsSerializer.item_show(item.id) if item.update(item_params)
+    if item.update(item_params)
+      render json: ItemsSerializer.item_show(item.id)
+    else
+      render json: { data: [] }, status: 404
+    end
   end
 
   def destroy

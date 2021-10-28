@@ -143,6 +143,22 @@ RSpec.describe 'item api endpoints' do
     expect(body[:data][:attributes][:unit_price]).to eq(new_item.unit_price)
   end
 
+  it 'returns 400 with bad merchant id' do
+    merchant = create(:merchant)
+    item = create(:item, merchant_id: merchant.id)
+    item_params = {
+      "name": "value1",
+      "description": "value2",
+      "unit_price": 100.99,
+      'merchant_id': 30330
+    }
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    patch "/api/v1/items/#{item.id}", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response.status).to eq(404)
+  end
+
   it 'find an items merchant' do
     merchant = create(:merchant)
     item = create(:item, merchant_id: merchant.id)
@@ -265,4 +281,5 @@ RSpec.describe 'item api endpoints' do
 
     expect(body).to have_key(:data)
   end
+
 end

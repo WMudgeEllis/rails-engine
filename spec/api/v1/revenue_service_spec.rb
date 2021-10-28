@@ -101,6 +101,12 @@ RSpec.describe 'revenue endpoints' do
     expect(body).to have_key(:error)
   end
 
+  it 'returns 400 when blank value' do
+    get '/api/v1/revenue/unshipped?quantity='
+
+    expect(response.status).to eq(400)
+  end
+
   it 'can find items ranked by revenue' do
     get '/api/v1/revenue/items?quantity=3'
 
@@ -119,7 +125,6 @@ RSpec.describe 'revenue endpoints' do
     expect(body[:data][0][:attributes]).to be_a(Hash)
     expect(body[:data][0][:attributes]).to have_key(:name)
     expect(body[:data][0][:attributes][:name]).to be_a(String)
-
     expect(body[:data][0][:attributes]).to have_key(:description)
     expect(body[:data][0][:attributes][:description]).to be_a(String)
     expect(body[:data][0][:attributes]).to have_key(:unit_price)
@@ -128,7 +133,8 @@ RSpec.describe 'revenue endpoints' do
   end
 
   it 'defaults to 10' do
-    create_list(:item, 10, merchant_id: @merchant.id)
+    items = create_list(:item, 10, merchant_id: @merchant.id)
+    items.each { |item| create(:invoice_item, item_id:item.id, invoice_id: @invoice.id) }
     get '/api/v1/revenue/items'
 
     expect(response).to be_successful
@@ -136,5 +142,19 @@ RSpec.describe 'revenue endpoints' do
     body = JSON.parse(response.body, symbolize_names: true)
 
     expect(body[:data].length).to eq(10)
+  end
+
+  it 'returns 400 with bad params' do
+    get '/api/v1/revenue/items?quantity='
+
+    expect(response.status).to eq(400)
+
+    get '/api/v1/revenue/items?quantity=-1'
+
+    expect(response.status).to eq(400)
+
+    get '/api/v1/revenue/items?quantity=adfhjsadfhjs'
+
+    expect(response.status).to eq(400)
   end
 end

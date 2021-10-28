@@ -8,14 +8,10 @@ class Item < ApplicationRecord
   validates :merchant_id, presence: true
 
   def invoices_only_item
-    #TODO change to 100% AR
-    id_num_items = invoices.joins(:invoice_items).group('invoice_items.invoice_id').count
-
-    ids = id_num_items.filter_map do |key, value|
-      key if value == 1
-    end
-    # require "pry"; binding.pry
-    Invoice.find(ids)
+    invoices.joins(:invoice_items)
+            .select('invoices.*')
+            .group('invoices.id')
+            .having('COUNT(*) = 1')
   end
 
   def self.name_search(name)
